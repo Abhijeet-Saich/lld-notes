@@ -82,7 +82,6 @@ class WhatsappNotification extends Notification {
         if(to[0] !== '+') throw new Error("Invalid contact")
         super(to, message)
     }
-
     send() {
         return `Whatsapp to ${this.to} : ${this.message}`
     }
@@ -97,7 +96,8 @@ class NotificationFactory {
   };
 
   static register(type, cls){
-    if(cls instanceof Notification){
+    console.log('registering', Notification.isPrototypeOf(cls))
+    if(Notification.isPrototypeOf(cls)){
         NotificationFactory.#registry[type] = cls
     }
   }
@@ -114,6 +114,6 @@ NotificationFactory.register('whatsapp', WhatsappNotification)
 // The caller never writes `new` and never names a concrete class
 const userPrefs = ["email", "sms", 'whatsapp'];
 for (const type of userPrefs) {
-  const n = NotificationFactory.create(type, "asha", "Report ready", "Update");
+  const n = NotificationFactory.create(type, "+asha", "Report ready", "Update");
   console.log(n.send());            // polymorphism: each one sends its own way
 }
